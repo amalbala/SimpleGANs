@@ -68,7 +68,7 @@ gan.compile(
 (x_train, y_train), (_, _) = keras.datasets.cifar10.load_data()
 
 #Only frog classes (number 6)
-x_train = x_train[y_train.flatten()==6]
+x_train = x_train[y_train.flatten() == 6]
 x_train = x_train.reshape((x_train.shape[0],) + (height, width, channels)).astype('float32') / 255.
 
 iterations = 10000
@@ -97,7 +97,11 @@ for step in range(iterations):
     a_loss = gan.train_on_batch(random_latent_vectors, misleading_targets)
 
     start += batch_size
-    if start % 100 == 0:
+
+    if start > len(x_train) - batch_size:
+        start = 0
+
+    if step % 100 == 0:
         gan.save_weights('gan.h5')
 
         print('discriminator loss:', discriminator_loss)
